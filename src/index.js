@@ -10,6 +10,8 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import { store, persistor } from "./redux/store";
 
+import { resolvers, typeDefs } from "./graphql/resolvers";
+
 import "./index.css";
 import App from "./App";
 
@@ -22,6 +24,14 @@ const cache = new InMemoryCache();
 const client = new ApolloClient({
   link: httpLink,
   cache,
+  resolvers,
+  typeDefs,
+});
+
+client.writeData({
+  data: {
+    cartHidden: true,
+  },
 });
 
 ReactDOM.render(
