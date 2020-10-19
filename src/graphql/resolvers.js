@@ -5,7 +5,7 @@ import { addItemToCart } from "./cart.utils";
 export const typeDefs = gql`
   extend type Mutation {
     ToggleCartHidden: Boolean!
-    AddItemToCart(item: Item!): [Item]
+    AddItemToCart(item: Item!): [Item]!
   }
   extend type Item {
     quantity: Int
@@ -38,18 +38,18 @@ export const resolvers = {
 
       return !cartHidden;
     },
-  },
+    addItemToCart: (_root, { item }, { cache }) => {
+      const { cartItems } = cache.readQuery({
+        query: GET_CART_ITEMS,
+      });
+      console.log("test");
+      const newCartItems = addItemToCart(cartItems, item);
+      cache.writeQuery({
+        query: GET_CART_ITEMS,
+        data: { cartItems: newCartItems },
+      });
 
-  addItemToCart: (_root, { item }, { cache }) => {
-    const { cartItems } = cache.readQuery({
-      query: GET_CART_ITEMS,
-    });
-    const newCartItems = addItemToCart(cartItems, item);
-    cache.writeQuery({
-      query: GET_CART_ITEMS,
-      data: { cartItems: newCartItems },
-    });
-
-    return newCartItems;
+      return newCartItems;
+    },
   },
 };
