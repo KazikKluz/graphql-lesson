@@ -24,25 +24,11 @@ const client = new ApolloClient({
   cache,
 });
 
-client
-  .query({
-    query: gql`
-      {
-        getCollectionsByTitle(title: "hats") {
-          id
-          title
-          items {
-            id
-            name
-            price
-            imageUrl
-          }
-        }
-      }
-    `,
-  })
-  .then((res) => console.log(res))
-  .catch((err) => console.log(err.message));
+client.writeData({
+  data: {
+    cartHidden: true,
+  },
+});
 
 ReactDOM.render(
   <ApolloProvider client={client}>
